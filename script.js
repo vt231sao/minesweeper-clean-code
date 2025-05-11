@@ -2,18 +2,21 @@ const game = document.getElementById("game");
 const rows = 9, cols = 9, mines = 10;
 let board = [];
 let revealed = [];
+let isFirstClick = true;
 
 function createEmptyBoard() {
     board = Array(rows).fill().map(() => Array(cols).fill(0));
     revealed = Array(rows).fill().map(() => Array(cols).fill(false));
 }
 
-function placeMines() {
+function placeMinesSafe(r0, c0) {
     let placed = 0;
     while (placed < mines) {
         const r = Math.floor(Math.random() * rows);
         const c = Math.floor(Math.random() * cols);
-        if (board[r][c] !== 'M') {
+        if (board[r][c] !== 'M' &&
+            Math.abs(r - r0) > 1 &&
+            Math.abs(c - c0) > 1) {
             board[r][c] = 'M';
             updateNumbers(r, c);
             placed++;
@@ -46,27 +49,51 @@ function drawBoard() {
             cell.dataset.row = r;
             cell.dataset.col = c;
             cell.addEventListener("click", () => handleClick(r, c));
+            cell.addEventListener("contextmenu", (e) => {
+                e.preventDefault();
+                toggleFlag(r, c);
+            });
             game.appendChild(cell);
         }
     }
 }
 
-function handleClick(r, c) {
-    if (revealed[r][c]) return;
-    revealed[r][c] = true;
+function toggleFlag(r, c) {
     const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+    if (revealed[r][c]) return;
+
+    if (cell.textContent === "🚩") {
+        cell.textContent = "";
+    } else {
+        cell.textContent = "🚩";
+    }
+}
+
+function handleClick(r, c) {
+    const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+    if (revealed[r][c] || cell.textContent === "🚩") return;
+
+    if (isFirstClick) {
+        placeMinesSafe(r, c);
+        isFirstClick = false;
+    }
+
+    revealed[r][c] = true;
     cell.classList.add("revealed");
 
     if (board[r][c] === 'M') {
         cell.textContent = "💣";
         alert("Гра закінчена!");
         revealAll();
+        return;
     } else if (board[r][c] === 0) {
         cell.textContent = "";
         revealEmpty(r, c);
     } else {
         cell.textContent = board[r][c];
     }
+
+    checkWin();
 }
 
 function revealEmpty(r, c) {
@@ -96,9 +123,22 @@ function revealAll() {
     }
 }
 
+function checkWin() {
+    let revealedCount = 0;
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            if (revealed[r][c]) revealedCount++;
+        }
+    }
+    if (revealedCount === rows * cols - mines) {
+        alert("Ви виграли!");
+        revealAll();
+    }
+}
+
 function startGame() {
+    isFirstClick = true;
     createEmptyBoard();
-    placeMines();
     drawBoard();
 }
 
