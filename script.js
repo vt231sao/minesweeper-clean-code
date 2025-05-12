@@ -3,6 +3,8 @@ const rows = 9, cols = 9, mines = 10;
 let board = [];
 let revealed = [];
 let isFirstClick = true;
+let startTime = null;
+let timerInterval = null;
 
 function createEmptyBoard() {
     board = Array(rows).fill().map(() => Array(cols).fill(0));
@@ -68,6 +70,10 @@ function toggleFlag(r, c) {
         cell.textContent = "🚩";
     }
 }
+function updateTimerDisplay() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    document.getElementById("timer").textContent = `⏱ Час: ${elapsed} с`;
+}
 
 function handleClick(r, c) {
     const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
@@ -76,6 +82,8 @@ function handleClick(r, c) {
     if (isFirstClick) {
         placeMinesSafe(r, c);
         isFirstClick = false;
+        startTime = Date.now();
+        timerInterval = setInterval(updateTimerDisplay, 1000);
     }
 
     revealed[r][c] = true;
@@ -133,6 +141,42 @@ function checkWin() {
     if (revealedCount === rows * cols - mines) {
         alert("Ви виграли!");
         revealAll();
+        clearInterval(timerInterval);
+        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+
+        fetch('save_score.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'time=' + encodeURIComponent(elapsedTime)
+        }).then(res => {
+            if (res.ok) {
+                alert(`Результат (${elapsedTime} с) збережено!`);
+            } else {
+                alert("Не вдалося зберегти результат.");
+            }
+        });
+
+        setTimeout(() => {
+            const time = prompt("Ви виграли! Введіть час у секундах:");
+            if (time !== null) {
+                fetch('save_score.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'time=' + encodeURIComponent(parseInt(time))
+                }).then(res => {
+                    if (res.ok) {
+                        alert("Результат збережено!");
+                    } else {
+                        alert("Не вдалося зберегти результат.");
+                    }
+                });
+            }
+        }, 200);
+
     }
 }
 
