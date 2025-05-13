@@ -3,6 +3,9 @@ const rows = 9, cols = 9, mines = 10;
 let board = [];
 let revealed = [];
 let isFirstClick = true;
+let startTime = null;
+let timerInterval = null;
+let gameOver = false;
 
 function createEmptyBoard() {
     board = Array(rows).fill().map(() => Array(cols).fill(0));
@@ -68,14 +71,21 @@ function toggleFlag(r, c) {
         cell.textContent = "🚩";
     }
 }
+function updateTimerDisplay() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    document.getElementById("timer").textContent = `⏱ Час: ${elapsed} с`;
+}
 
 function handleClick(r, c) {
+    if (gameOver) return;
     const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
     if (revealed[r][c] || cell.textContent === "🚩") return;
 
     if (isFirstClick) {
         placeMinesSafe(r, c);
         isFirstClick = false;
+        startTime = Date.now();
+        timerInterval = setInterval(updateTimerDisplay, 1000);
     }
 
     revealed[r][c] = true;
@@ -107,7 +117,8 @@ function revealEmpty(r, c) {
     }
 }
 
-function revealAll() {
+function revealAll(lock = false) {
+    gameOver = true;
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
             if (!revealed[r][c]) {
@@ -118,6 +129,10 @@ function revealAll() {
                     cell.textContent = board[r][c];
                 }
                 cell.classList.add("revealed");
+            }
+            if (lock) {
+                const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+                cell.style.pointerEvents = 'none';
             }
         }
     }
@@ -133,6 +148,22 @@ function checkWin() {
     if (revealedCount === rows * cols - mines) {
         alert("Ви виграли!");
         revealAll();
+        clearInterval(timerInterval);
+        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+
+        fetch('save_score.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'time=' + encodeURIComponent(elapsedTime)
+        }).then(res => {
+            if (res.ok) {
+                alert(`Результат (${elapsedTime} с) збережено!`);
+            } else {
+                alert("Не вдалося зберегти результат.");
+            }
+        });
     }
 }
 
