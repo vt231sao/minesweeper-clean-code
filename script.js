@@ -5,6 +5,7 @@ let revealed = [];
 let isFirstClick = true;
 let startTime = null;
 let timerInterval = null;
+let gameOver = false;
 
 function createEmptyBoard() {
     board = Array(rows).fill().map(() => Array(cols).fill(0));
@@ -76,6 +77,7 @@ function updateTimerDisplay() {
 }
 
 function handleClick(r, c) {
+    if (gameOver) return;
     const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
     if (revealed[r][c] || cell.textContent === "🚩") return;
 
@@ -115,7 +117,8 @@ function revealEmpty(r, c) {
     }
 }
 
-function revealAll() {
+function revealAll(lock = false) {
+    gameOver = true;
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
             if (!revealed[r][c]) {
@@ -126,6 +129,10 @@ function revealAll() {
                     cell.textContent = board[r][c];
                 }
                 cell.classList.add("revealed");
+            }
+            if (lock) {
+                const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+                cell.style.pointerEvents = 'none';
             }
         }
     }
@@ -157,26 +164,6 @@ function checkWin() {
                 alert("Не вдалося зберегти результат.");
             }
         });
-
-        setTimeout(() => {
-            const time = prompt("Ви виграли! Введіть час у секундах:");
-            if (time !== null) {
-                fetch('save_score.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'time=' + encodeURIComponent(parseInt(time))
-                }).then(res => {
-                    if (res.ok) {
-                        alert("Результат збережено!");
-                    } else {
-                        alert("Не вдалося зберегти результат.");
-                    }
-                });
-            }
-        }, 200);
-
     }
 }
 

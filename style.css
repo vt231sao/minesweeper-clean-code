@@ -1,29 +1,70 @@
 body {
-    font-family: Arial;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
     text-align: center;
-    background: #f5f5f5;
 }
+h1{
+    padding: 0;
+    margin: 0;
+}
+form {
+    background: #fff;
+    margin: 10px;
+    padding: 20px;
+    display: inline-block;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+input[type="text"] {
+    padding: 8px;
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+button {
+    padding: 8px 15px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    background: #218838;
+}
+
 #game {
     display: grid;
-    grid-template-columns: repeat(9, 30px);
-    margin: 20px auto;
-    justify-content: center;
+    gap: 2px;
+    margin-top: 20px;
 }
 .cell {
     width: 30px;
     height: 30px;
-    border: 1px solid #ccc;
-    background: #eee;
+    border: 1px solid #888;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     cursor: pointer;
+    background-color: #f8f9fa;
 }
-.cell.revealed {
-    background: #ddd;
-    cursor: default;
+
+.revealed {
+    background: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
 }
-#timer {
-    font-size: 18px;
-    margin-bottom: 10px;
+
+.container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }

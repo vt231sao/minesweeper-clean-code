@@ -14,13 +14,16 @@ $username = $_SESSION['username'];
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Гра Сапер</h1>
-<p id="timer">⏱ Час: 0 с</p>
-<p>👋 Вітаємо, <strong><?= htmlspecialchars($username) ?></strong>!</p>
-<form method="POST" action="logout.php" style="margin-bottom: 10px;">
-    <button type="submit">Вийти</button>
-</form>
-<div id="game"></div>
-<script src="script.js"></script>
+<div class="container">
+    <h1>Гра Сапер</h1>
+    <p id="timer">⏱ Час: 0 с</p>
+    <p>👋 Вітаємо, <strong><?= htmlspecialchars($username) ?></strong>!</p>
+    <div id="game"></div>
+    <form method="POST" action="logout.php" style="margin-bottom: 10px;">
+        <button type="submit">Вийти</button>
+    </form>
+</div>
+<script src="script.js?v=1" defer></script>
 </body>
+
 </html>
