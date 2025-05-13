@@ -1,5 +1,5 @@
 const game = document.getElementById("game");
-const rows = 9, cols = 9, mines = 10;
+let rows = 9, cols = 9, mines = 10;
 let board = [];
 let revealed = [];
 let isFirstClick = true;
@@ -10,6 +10,33 @@ let gameOver = false;
 function createEmptyBoard() {
     board = Array(rows).fill().map(() => Array(cols).fill(0));
     revealed = Array(rows).fill().map(() => Array(cols).fill(false));
+}
+function restartGame() {
+    clearInterval(timerInterval);
+    document.getElementById("timer").textContent = "⏱ Час: 0 с";
+    gameOver = false;
+    isFirstClick = true;
+    startTime = null;
+    timerInterval = null;
+    createEmptyBoard();
+    drawBoard();
+}
+
+function setDifficulty(level) {
+    if (level === "easy") {
+        rows = 9;
+        cols = 9;
+        mines = 10;
+    } else if (level === "medium") {
+        rows = 16;
+        cols = 16;
+        mines = 40;
+    } else if (level === "hard") {
+        rows = 16;
+        cols = 30;
+        mines = 99;
+    }
+    restartGame();
 }
 
 function placeMinesSafe(r0, c0) {
