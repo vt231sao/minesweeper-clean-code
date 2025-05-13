@@ -6,6 +6,7 @@ let isFirstClick = true;
 let startTime = null;
 let timerInterval = null;
 let gameOver = false;
+let currentDifficulty = 'easy';
 
 function createEmptyBoard() {
     board = Array(rows).fill().map(() => Array(cols).fill(0));
@@ -23,6 +24,7 @@ function restartGame() {
 }
 
 function setDifficulty(level) {
+    currentDifficulty = level;
     if (level === "easy") {
         rows = 9;
         cols = 9;
@@ -38,6 +40,7 @@ function setDifficulty(level) {
     }
     restartGame();
 }
+
 
 function placeMinesSafe(r0, c0) {
     let placed = 0;
@@ -167,11 +170,13 @@ function revealAll(lock = false) {
 
 function checkWin() {
     let revealedCount = 0;
+
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
             if (revealed[r][c]) revealedCount++;
         }
     }
+
     if (revealedCount === rows * cols - mines) {
         alert("Ви виграли!");
         revealAll();
@@ -183,7 +188,8 @@ function checkWin() {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: 'time=' + encodeURIComponent(elapsedTime)
+            body: 'time=' + encodeURIComponent(elapsedTime) +
+                '&difficulty=' + encodeURIComponent(currentDifficulty)
         }).then(res => {
             if (res.ok) {
                 alert(`Результат (${elapsedTime} с) збережено!`);
@@ -193,6 +199,7 @@ function checkWin() {
         });
     }
 }
+
 
 function startGame() {
     isFirstClick = true;
