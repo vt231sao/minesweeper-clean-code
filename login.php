@@ -20,6 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 <div class="container">
     <h2>🔐 Вхід до гри Сапер</h2>
+    <a href="leaderboard.php" class="button">Таблиця лідерів</a>
     <form method="POST">
         <label>Ваше ім’я:</label><br>
         <input type="text" name="username" required><br><br>
