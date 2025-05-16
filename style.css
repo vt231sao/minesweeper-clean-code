@@ -28,6 +28,22 @@ input[type="text"] {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 5px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+.button:hover {
+    background-color: #45a049;
+}
+
+
 button {
     padding: 8px 15px;
     background: #28a745;
@@ -44,6 +60,7 @@ button:hover {
     display: grid;
     gap: 2px;
     margin-top: 20px;
+    justify-content: center;
 }
 .cell {
     width: 30px;
