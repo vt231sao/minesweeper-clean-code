@@ -1,13 +1,18 @@
 <?php
-global $conn;
-require 'db_config.php';
+require_once 'db_config.php';
 
-$result = $conn->query("SELECT * FROM scores ORDER BY time_seconds ASC LIMIT 10");
-$data = [];
+$conn = getDbConnection();
 
+$sql = "SELECT * FROM scores ORDER BY time_seconds ASC LIMIT 10";
+$result = $conn->query($sql);
+
+$scores = [];
 while ($row = $result->fetch_assoc()) {
-    $data[] = $row;
+    $scores[] = $row;
 }
-echo json_encode($data);
+
+header('Content-Type: application/json');
+echo json_encode($scores);
+
 $conn->close();
 ?>
