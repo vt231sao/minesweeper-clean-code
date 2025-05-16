@@ -1,8 +1,7 @@
 <?php
-global $conn;
-require 'db_config.php';
+require_once 'db_config.php';
 
-function getTopPlayers($conn, $difficulty) {
+function getTopPlayers(mysqli $conn, string $difficulty): mysqli_result {
     $stmt = $conn->prepare("
         SELECT player_name, MIN(time_seconds) as best_time 
         FROM scores 
@@ -16,10 +15,12 @@ function getTopPlayers($conn, $difficulty) {
     return $stmt->get_result();
 }
 
+$conn = getDbConnection();
 $easyResults = getTopPlayers($conn, 'easy');
 $mediumResults = getTopPlayers($conn, 'medium');
 $hardResults = getTopPlayers($conn, 'hard');
 ?>
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
