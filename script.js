@@ -32,11 +32,11 @@ function setDifficulty(level) {
     } else if (level === "medium") {
         rows = 16;
         cols = 16;
-        mines = 40;
+        mines = 10;
     } else if (level === "hard") {
         rows = 16;
         cols = 30;
-        mines = 99;
+        mines = 5;
     }
     restartGame();
 }
