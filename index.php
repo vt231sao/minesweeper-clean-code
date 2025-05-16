@@ -17,6 +17,7 @@ $username = $_SESSION['username'];
 <div class="container">
 
     <h1>Гра Сапер</h1>
+    <a href="leaderboard.php" class="button">Таблиця лідерів</a>
     <p id="timer">⏱ Час: 0 с</p>
     <p>👋 Вітаємо, <strong><?= htmlspecialchars($username) ?></strong>!</p>
     <div id="difficulty" style="margin-bottom: 10px;">

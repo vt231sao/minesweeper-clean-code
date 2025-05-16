@@ -36,7 +36,7 @@ function setDifficulty(level) {
     } else if (level === "hard") {
         rows = 16;
         cols = 30;
-        mines = 5;
+        mines = 20;
     }
     restartGame();
 }
