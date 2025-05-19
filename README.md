@@ -36,7 +36,9 @@
 **Кількість рядків коду (приблизно):**
 
 ```bash
-411 рядків коду
+411 рядків коду, використовував команду (Get-ChildItem -Path .\js\ -Filter *.js -Recurse | Get-Content | Measure-Object -Line).Lines + (Get-ChildItem -Path . -Filter *.php -Recurse | Get-Content | Measure-Object -Line).Lines
+Але ця команда також рахує код в файлах .php, тобто і html також
+в файлах .js вийшло 216 рядків коду, використовував команду (Get-ChildItem -Path .\js\ -Filter *.js -Recurse | Get-Content | Measure-Object -Line).Lines
 
 Завдання 2: Опис функціоналу і краси коду
 Процес запуску локально:
