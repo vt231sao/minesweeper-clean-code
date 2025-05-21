@@ -1,42 +1,37 @@
 import { Renderer } from './renderer.js';
+import { EasyDifficulty, MediumDifficulty, HardDifficulty } from './difficulty-strategies';
 
 export class Board {
-    constructor(rows, cols, mines, container, timer, difficulty = 'easy') {
-        this.container = container;
-        this.timer = timer;
-        this.setDifficulty(difficulty);
-    }
+  constructor(container, timer, difficulty = 'easy') {
+    this.container = container;
+    this.timer = timer;
+    this.difficultyStrategies = {
+      easy: new EasyDifficulty(),
+      medium: new MediumDifficulty(),
+      hard: new HardDifficulty()
+    };
+    this.setDifficulty(difficulty);
+  }
 
-    setDifficulty(level) {
-        this.difficulty = level;
 
-        if (level === 'easy') {
-            this.rows = 9;
-            this.cols = 9;
-            this.mines = 10;
-        } else if (level === 'medium') {
-            this.rows = 16;
-            this.cols = 16;
-            this.mines = 40;
-        } else if (level === 'hard') {
-            this.rows = 16;
-            this.cols = 30;
-            this.mines = 99;
-        }
+  setDifficulty(level) {
+    const strategy = this.difficultyStrategies[level] || this.difficultyStrategies.easy;
+    strategy.configure(this);
+    this.difficulty = level;
+    this.restart();
+  }
 
-        this.restart();
-    }
+  restart() {
+    this.board = Array(this.rows).fill().map(() => Array(this.cols).fill(0));
+    this.revealed = Array(this.rows).fill().map(() => Array(this.cols).fill(false));
+    this.isFirstClick = true;
+    this.gameOver = false;
+    this.timer.reset();
+    Renderer.draw(this, this.container, this.handleClick.bind(this), this.toggleFlag.bind(this));
+  }
 
-    restart() {
-        this.board = Array(this.rows).fill().map(() => Array(this.cols).fill(0));
-        this.revealed = Array(this.rows).fill().map(() => Array(this.cols).fill(false));
-        this.isFirstClick = true;
-        this.gameOver = false;
-        this.timer.reset();
-        Renderer.draw(this, this.container, this.handleClick.bind(this), this.toggleFlag.bind(this));
-    }
 
-    placeMinesSafe(r0, c0) {
+  placeMinesSafe(r0, c0) {
         let placed = 0;
         while (placed < this.mines) {
             const r = Math.floor(Math.random() * this.rows);
