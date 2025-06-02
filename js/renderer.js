@@ -1,3 +1,5 @@
+export const CELL_SIZE = 30;
+
 export const Renderer = {
     draw(board, container, handleLeftClick, handleRightClick) {
         this.clearContainer(container);
@@ -10,7 +12,7 @@ export const Renderer = {
     },
 
     setupGridLayout(container, cols) {
-        container.style.gridTemplateColumns = `repeat(${cols}, 30px)`;
+        container.style.gridTemplateColumns = `repeat(${cols}, ${CELL_SIZE}px)`;
     },
 
     createCells(board, container, handleLeftClick, handleRightClick) {
